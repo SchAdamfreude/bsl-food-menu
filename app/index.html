@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Cafe Menu</title>
+  <meta name="theme-color" content="#c62a22">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preload" href="fonts/jost-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="menu" id="menu" aria-label="Menu"></main>
+
+  <footer class="bar">
+    <button type="button" class="clear" id="clear" aria-label="Clear all ticked items (press and hold for one second)">
+      <span class="clear-fill" aria-hidden="true"></span>
+      <span class="clear-label" id="clear-label">Hold to clear all</span>
+    </button>
+    <div class="total" aria-live="polite">
+      <span class="total-count" id="count">No items</span>
+      <span class="total-label">Total</span>
+      <span class="total-amount" id="total">£0.00</span>
+    </div>
+  </footer>
+
+  <script src="menu.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Default .gitignore for new Claude projects (copied in by the checkpoint hook).
+# EDIT THIS FILE to change what new repos ignore - add niche formats here.
+# Existing projects: edit their own .gitignore instead.
+
+# Runtime output
+Logs/
+*.log
+
+# Media / binaries (managed by Dropbox, not git)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.aif
+*.aiff
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.tif
+*.tiff
+*.exr
+*.psd
+*.ai
+*.aep
+*.prproj
+*.zip
+*.rar
+*.7z
+
+# --- BSL Food Menu ---
+# The app's icons must be published; the reference photo stays local (repo is public)
+!app/icons/*.png

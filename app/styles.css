@@ -1,0 +1,264 @@
+/* Cafe Menu: everything is sized in rem/em so app.js can scale the whole layout
+   to fit the screen by changing only the root font size. */
+
+@font-face {
+  font-family: 'Jost';
+  src: url('fonts/jost-latin-wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --red: #c62a22;
+  --red-light: #d8402f;
+  --red-dark: #a51810;
+  --ink: #3a3f47;
+  --muted: #7a828c;
+  --gap: 0.7rem;
+  font-size: 16px; /* overwritten by app.js */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  height: 100dvh;
+  padding:
+    max(var(--gap), env(safe-area-inset-top))
+    max(var(--gap), env(safe-area-inset-right))
+    max(var(--gap), env(safe-area-inset-bottom))
+    max(var(--gap), env(safe-area-inset-left));
+  background: linear-gradient(170deg, #f5f8fa 0%, #e6ecf1 55%, #d9e2ea 100%);
+  color: var(--ink);
+  font-family: 'Jost', 'Century Gothic', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* ---------- Menu grid: 3 columns, as on the display slide ---------- */
+
+.menu {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 29fr 35fr 36fr;
+  gap: var(--gap);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+  min-height: 0;
+}
+
+.section {
+  /* --rows (items + header) is set by app.js so boxes share the column height in proportion */
+  flex: var(--rows) 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0.45em 0.75em 0.5em;
+  border-radius: 1em;
+  background: linear-gradient(165deg, var(--red-light) 0%, var(--red) 50%, var(--red-dark) 100%);
+  box-shadow: 0 0.25em 0.7em rgba(110, 15, 10, 0.25);
+  color: #fff;
+  text-shadow: 0 0.05em 0.12em rgba(0, 0, 0, 0.18);
+}
+
+.section h2 {
+  flex: none;
+  margin: 0 0 0.15em;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.16em;
+}
+
+.section ul {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section li {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+/* ---------- Items: the whole row is the tap target ---------- */
+
+.item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  margin: 0 -0.4em;
+  padding: 0.12em 0.4em;
+  border-radius: 0.5em;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.item.on { background: rgba(255, 255, 255, 0.17); }
+.item:active { background: rgba(255, 255, 255, 0.24); }
+
+.item input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tick {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.4em;
+  height: 1.4em;
+  border: 0.13em solid #fff;
+  border-radius: 0.32em;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background-color 0.15s;
+}
+
+.tick svg {
+  width: 82%;
+  height: 82%;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  transition: stroke-dashoffset 0.18s ease-out;
+}
+
+.item input:checked + .tick { background: #fff; }
+.item input:checked + .tick svg { stroke-dashoffset: 0; }
+.item input:focus-visible + .tick { outline: 0.14em solid #fff; outline-offset: 0.14em; }
+
+.name {
+  flex: 1;
+  min-width: 0;
+}
+
+.price {
+  flex: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Bottom bar: hold-to-clear + running total ---------- */
+
+.bar {
+  flex: none;
+  display: flex;
+  gap: var(--gap);
+  height: 3.4rem;
+}
+
+.clear {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  padding: 0 1.3em;
+  border: 0.13em solid var(--red);
+  border-radius: 0.9rem;
+  background: #fff;
+  color: var(--red);
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  box-shadow: 0 0.15em 0.5em rgba(40, 55, 70, 0.12);
+}
+
+/* The fill is a white-on-red copy of the label, revealed left-to-right over the 1 s hold */
+.clear-fill {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--red);
+  color: #fff;
+  clip-path: inset(0 100% 0 0);
+}
+
+.clear.holding .clear-fill {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1s linear;
+}
+
+.clear.done .clear-fill { clip-path: inset(0 0 0 0); }
+
+.total {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  min-width: 0;
+  padding: 0 1.3rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  box-shadow: 0 0.15em 0.5em rgba(40, 55, 70, 0.12);
+  white-space: nowrap;
+}
+
+.total-count {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.total-label {
+  color: var(--ink);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.total-amount {
+  color: var(--red);
+  font-size: 2.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Portrait: columns are narrow, so width (not height) limits the text size.
+   Even out the columns and trim horizontal padding to let the text grow. */
+@media (orientation: portrait) {
+  .menu { grid-template-columns: 1fr 1fr 1fr; }
+  .section { padding-left: 0.55em; padding-right: 0.55em; }
+  .item { gap: 0.45em; margin: 0 -0.3em; padding-left: 0.3em; padding-right: 0.3em; }
+  .bar { height: 3.8rem; }
+}
