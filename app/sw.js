@@ -1,7 +1,7 @@
 // Service worker: stores every app file on the device so the menu works with no internet.
 // Bump CACHE_VERSION whenever any file in app/ changes; installed tablets pick up the
 // new version the next time the app is opened with an internet connection.
-const CACHE_VERSION = 'cafe-menu-v1';
+const CACHE_VERSION = 'cafe-menu-v2';
 const FILES = [
   './',
   'index.html',

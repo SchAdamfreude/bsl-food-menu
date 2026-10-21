@@ -203,6 +203,9 @@ body {
   box-shadow: 0 0.15em 0.5em rgba(40, 55, 70, 0.12);
 }
 
+.clear-label,
+.clear-fill { pointer-events: none; } /* the button itself is always the touch target */
+
 /* The fill is a white-on-red copy of the label, revealed left-to-right over the 1 s hold */
 .clear-fill {
   position: absolute;

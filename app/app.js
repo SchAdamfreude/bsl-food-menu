@@ -74,10 +74,18 @@
 
   let holdTimer = null;
   let resetTimer = null;
+  let holdPointer = null;
 
+  // Firefox (touch) can drop the release event when it is only listened for on the button,
+  // so the press is captured, the button never takes focus, and a release anywhere ends it.
   function startHold(e) {
-    if (e.button > 0) return;
-    cancelHold();
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.cancelable) e.preventDefault();
+    if (holdTimer) return;
+    if (e.pointerId !== undefined) {
+      holdPointer = e.pointerId;
+      try { clearBtn.setPointerCapture(e.pointerId); } catch (err) { /* capture is best-effort */ }
+    }
     clearTimeout(resetTimer);
     clearBtn.classList.remove('done');
     setClearText('Hold to clear all');
@@ -85,6 +93,7 @@
     clearBtn.classList.add('holding');
     holdTimer = setTimeout(() => {
       holdTimer = null;
+      holdPointer = null;
       for (const cb of checkboxes) cb.checked = false;
       update();
       clearBtn.classList.replace('holding', 'done');
@@ -102,18 +111,31 @@
       clearTimeout(holdTimer);
       holdTimer = null;
     }
+    holdPointer = null;
     clearBtn.classList.remove('holding');
   }
 
+  // Sliding the finger off the button also cancels (capture stops pointerleave firing)
+  function checkStillOver(e) {
+    if (!holdTimer || e.pointerId !== holdPointer) return;
+    const r = clearBtn.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) cancelHold();
+  }
+
   clearBtn.addEventListener('pointerdown', startHold);
-  ['pointerup', 'pointerleave', 'pointercancel', 'blur'].forEach((ev) => clearBtn.addEventListener(ev, cancelHold));
+  clearBtn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  clearBtn.addEventListener('mousedown', (e) => e.preventDefault());
+  clearBtn.addEventListener('pointermove', checkStillOver);
+  clearBtn.addEventListener('lostpointercapture', cancelHold);
   clearBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+  // Any release, anywhere, ends the hold
+  ['pointerup', 'pointercancel', 'touchend', 'touchcancel', 'mouseup', 'keyup'].forEach((ev) =>
+    window.addEventListener(ev, cancelHold, true));
+  window.addEventListener('blur', cancelHold);
+  document.addEventListener('visibilitychange', cancelHold);
   // Keyboard users: holding Space/Enter behaves like holding a finger down
   clearBtn.addEventListener('keydown', (e) => {
-    if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); startHold(e); }
-  });
-  clearBtn.addEventListener('keyup', (e) => {
-    if (e.key === ' ' || e.key === 'Enter') cancelHold();
+    if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHold(e);
   });
   // Long-press on Android can otherwise trigger the browser's context menu anywhere
   document.addEventListener('contextmenu', (e) => e.preventDefault());

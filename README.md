@@ -15,6 +15,15 @@ Built for a Lenovo Tab P11 (2nd Gen) in either orientation, and works **fully of
 
 After this the tablet never needs internet. The app opens full-screen, like any other app.
 
+### Using Firefox instead of Chrome (Android)
+Firefox for Android also works offline, using the same mechanism. To install, open the URL, then tap
+**⋮** → **Add app to Home screen** (older versions say **Install** or **Add to Home screen**).
+- In Firefox **Settings → Delete browsing data on quit**, make sure it is **off**. Otherwise Firefox
+  deletes the offline copy every time it closes.
+- Chrome is still the more robust choice for a dedicated tablet. It installs a true Android app, and its
+  saved data is less likely to be cleared.
+- Desktop Firefox (Windows/Mac) has no "install" option. That's normal, because installing is done on the tablet.
+
 ## Changing prices or items
 1. Edit `app/menu.js`. Prices are in **pence** (e.g. `899` = £8.99).
 2. In `app/sw.js`, bump `CACHE_VERSION` (e.g. `cafe-menu-v1` → `cafe-menu-v2`).
